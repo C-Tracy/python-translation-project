@@ -28,22 +28,22 @@ def translate_sequence(rna_sequence, genetic_code):
     str
         A string of the translated amino acids.
     """
-    print(rna_sequence)
+    #print(rna_sequence)
    # rnalen = length(rna_sequence)
     rna_sequence = rna_sequence.upper()
     protein = "" 
     for i in range(0, len(rna_sequence), 3):
         codon = rna_sequence[i:i+3]
-        print(codon)
+        #print(codon)
         codon = codon.upper()
         if len(codon) < 3 :
             break
         if genetic_code[codon] == "*" :
-            print("identified a stop codon")
+            #print("identified a stop codon")
             break
         protein += genetic_code[codon]   
     
-    print(protein)
+    #print(protein)
             #protein = protein.upper()
     return protein 
 
@@ -85,7 +85,8 @@ def get_all_translations(rna_sequence, genetic_code):
     """
     rna_sequence = rna_sequence.upper()
     print(rna_sequence)
-    protein = ""
+    aa = ""
+    protein_list = []
 #    start = ""
 #    for i in range(0, len(rna_sequence), 1):
 #        #frame1 = rna_sequence[i:i+3]
@@ -99,36 +100,20 @@ def get_all_translations(rna_sequence, genetic_code):
 #            print("identified a stop codon")
 #            break
 #        protein += genetic_code[codon]
-    frame1 = ""
-    frame1_protein = ""
-    frame2 = ""
-    frame2_protein = ""
-    frame3 = ""
-    frame3_protein = ""
-    start1 = ""
-    start2 = ""
-    start3 = ""
-    protein_list = ""
-    for i in range(0, len(rna_sequence), 1):
-        frame1 = rna_sequence[i:i+3]
-        if rna_sequence[i:i+3] == "AUG" :
-            start1=i
-            break
-
-    for x in range(int(start1), len(rna_sequence), 3):
-        codon = rna_sequence[x:x+3]
-        print("in frame 1 translation block")
-        if genetic_code[codon] == "*" :
-            print("identified a stop codon")
-            break
-        frame1_protein += genetic_code[codon]
-        print("frame 1 protein is...", frame1_protein)            
+    for z in range(len(rna_sequence) - 2):
+        codon = rna_sequence[z:z+3]
+        if codon == "AUG" :
+            remaining_seq = rna_sequence[z:len(rna_sequence)]
+            for x in range(0, len(remaining_seq), 3):
+                aa = genetic_code[remaining_seq]
+            if aa:
+                protein_list.append(aa)
+                print(aa)
+        #print("protein is...", protein)            
         #break
-
-  
-    protein_list = list[frame1_protein, frame2_protein, frame3_protein]
+    
     print(protein_list)
-    return(protein_list)
+    return(aa)
     
 def get_reverse(sequence):
     """Reverse orientation of `sequence`.
