@@ -87,33 +87,41 @@ def get_all_translations(rna_sequence, genetic_code):
     print(rna_sequence)
     aa = ""
     protein_list = []
-#    start = ""
-#    for i in range(0, len(rna_sequence), 1):
-#        #frame1 = rna_sequence[i:i+3]
-#        if rna_sequence[i:i+3] == "AUG" :
-#            start=i
-#            break
-#    for x in range(start, len(rna_sequence), 3):
-#        codon = rna_sequence[x:x+3]
-#        print(codon)
-#        if genetic_code[codon] == "*" :
-#            print("identified a stop codon")
-#            break
-#        protein += genetic_code[codon]
-    for z in range(len(rna_sequence) - 2):
-        codon = rna_sequence[z:z+3]
-        if codon == "AUG" :
-            remaining_seq = rna_sequence[z:len(rna_sequence)]
-            for x in range(0, len(remaining_seq), 3):
-                aa = genetic_code[remaining_seq]
-            if aa:
-                protein_list.append(aa)
-                print(aa)
-        #print("protein is...", protein)            
+    protein = ""
+    start = ""
+    start_list = []
+#    import pdb; pdb.set_trace()
+    for i in range(0, len(rna_sequence), 1):
+        #frame1 = rna_sequence[i:i+3]
+        if rna_sequence[i:i+3] == "AUG" :
+            start_list.append(i)
+    for y in start_list:
+        for x in range(y, len(rna_sequence), 3):
+            codon = rna_sequence[x:x+3]
+            print(codon + "-")
+            if len(codon) < 3:
+                print("codon less than 3 identified")
+                break        
+            if genetic_code[codon] == "*" :
+                print("identified a stop codon")
+                break
+            protein += genetic_code[codon]
+        protein_list.append(protein)
+        protein = ""
+#    for z in range(len(rna_sequence) - 2):
+#        codon = rna_sequence[z:z+3]
+#        if codon == "AUG" :
+#            remaining_seq = rna_sequence[z:len(rna_sequence)]
+#            for x in range(0, len(remaining_seq), 3):
+#                aa = genetic_code[remaining_seq]
+#            if aa:
+#                protein_list.append(aa)
+#                print(aa)
+    print("protein is...", protein)            
         #break
     
     print(protein_list)
-    return(aa)
+    return(protein_list)
     
 def get_reverse(sequence):
     """Reverse orientation of `sequence`.
@@ -125,6 +133,7 @@ def get_reverse(sequence):
     Examples
     --------
     >>> get_reverse('AUGC')
+n_list = []
     'CGUA'
     """
     #print("\n"+sequence)
