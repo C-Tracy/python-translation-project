@@ -212,7 +212,64 @@ def get_longest_peptide(rna_sequence, genetic_code):
         A string of the longest sequence of amino acids encoded by
         `rna_sequence`.
     """
-    pass
+    rna_sequence = rna_sequence.upper()
+    print(rna_sequence)
+    longestpeptide = ""
+    aa = ""
+    protein_list = []
+    protein = ""
+    revprotein = ""
+    start = ""
+    revstart = ""
+    rev_start_list = []
+    start_list = []
+#    import pdb; pdb.set_trace()
+    for i in range(0, len(rna_sequence), 1):
+        #frame1 = rna_sequence[i:i+3]
+        if rna_sequence[i:i+3] == "AUG" :
+            start_list.append(i)
+    for y in start_list:
+        for x in range(y, len(rna_sequence), 3):
+            codon = rna_sequence[x:x+3]
+            print(codon + "-")
+            if len(codon) < 3:
+                print("codon less than 3 identified")
+                break
+            if genetic_code[codon] == "*" :
+                print("identified a stop codon")
+                break
+            protein += genetic_code[codon]
+        protein_list.append(protein)
+        protein = ""
+    
+    stringlength=len(rna_sequence)
+    reverse=rna_sequence[stringlength::-1]
+
+
+    for i in range(0, len(reverse), 1):
+        #frame1 = rna_sequence[i:i+3]
+        if reverse[i:i+3] == "AUG" :
+            rev_start_list.append(i)
+    for y in rev_start_list:
+        for x in range(y, len(reverse), 3):
+            revcodon = reverse[x:x+3]
+            print(revcodon + "-")
+            if len(revcodon) < 3:
+                print("codon less than 3 identified")
+                break
+            if genetic_code[revcodon] == "*" :
+                print("identified a stop codon")
+                break
+            revprotein += genetic_code[revcodon]
+        protein_list.append(revprotein)
+        protein = ""
+
+
+    print(protein_list)
+    if protein_list:
+        longestpeptide = max(protein_list, key=len)
+    print(longestpeptide)
+    return longestpeptide
 
 
 if __name__ == '__main__':
