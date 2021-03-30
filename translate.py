@@ -244,15 +244,16 @@ def get_longest_peptide(rna_sequence, genetic_code):
     
     stringlength=len(rna_sequence)
     reverse=rna_sequence[stringlength::-1]
+    print(rna_sequence)
+    print(reverse)
 
-
-    for i in range(0, len(reverse), 1):
+    for a in range(0, len(reverse), 1):
         #frame1 = rna_sequence[i:i+3]
-        if reverse[i:i+3] == "AUG" :
-            rev_start_list.append(i)
-    for y in rev_start_list:
-        for x in range(y, len(reverse), 3):
-            revcodon = reverse[x:x+3]
+        if reverse[a:a+3] == "AUG" :
+            rev_start_list.append(a)
+    for b in rev_start_list:
+        for c in range(b, len(reverse), 3):
+            revcodon = reverse[c:c+3]
             print(revcodon + "-")
             if len(revcodon) < 3:
                 print("codon less than 3 identified")
@@ -262,10 +263,10 @@ def get_longest_peptide(rna_sequence, genetic_code):
                 break
             revprotein += genetic_code[revcodon]
         protein_list.append(revprotein)
-        protein = ""
+        revprotein = ""
 
 
-    print(protein_list)
+    print("protein list is...", protein_list)
     if protein_list:
         longestpeptide = max(protein_list, key=len)
     print(longestpeptide)
