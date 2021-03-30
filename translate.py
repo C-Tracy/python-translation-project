@@ -242,11 +242,12 @@ def get_longest_peptide(rna_sequence, genetic_code):
         protein_list.append(protein)
         protein = ""
     
-    stringlength=len(rna_sequence)
-    reverse=rna_sequence[stringlength::-1]
-    print(rna_sequence)
-    print(reverse)
-
+    #stringlength=len(rna_sequence)
+    #reverse=rna_sequence[stringlength::-1]
+    #print(rna_sequence)
+    #print(reverse)
+    reverse=reverse_and_complement(rna_sequence)
+    
     for a in range(0, len(reverse), 1):
         #frame1 = rna_sequence[i:i+3]
         if reverse[a:a+3] == "AUG" :
