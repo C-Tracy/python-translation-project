@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#! usr/bin/env python3
 
 import sys
 import re
@@ -8,35 +8,57 @@ import find_orf
 import translate
 #import and use the parse_sequence_from_path function in find_orf.py, just like it is currently used in the main function of find_orf.py.
 
-def find_translate_orf():
+def find_translate_orf(sequence,
+        start_codons = ['AUG'],
+        stop_codons = ['UAA', 'UAG', 'UGA'],
+            ):
     '''
+    Find and translate the first open reading frame of a DNA or RNA sequence.
 
+    If there are no ORFs in the sequence, an empty string is returned.
+
+    Parameters
+    ----------
+    sequence : str
+        A string of DNA or RNA sequence (upper or lower-case)
+    start_codons : list of strings
+        All possible start codons. Each codon must be a string of 3 RNA bases,
+        upper or lower-case.
+    stop_codons : list of strings
+        All possible stop codons. Each codon must be a string of 3 RNA bases,
+        upper or lower-case.
+
+    Returns
+    -------
+    str
+        A string of amino acids encoded by DNA or RNA string, starting with a start codon and ending with the first stop codon. 
     '''
-    find_orf.find_first_orf('sequence', ['AUG'], ['UAA'])
+    genetic_code = {
+            'GUC': 'V', 'ACC': 'T', 'GUA': 'V', 'GUG': 'V', 'ACU': 'T',
+            'AAC': 'N', 'CCU': 'P', 'UGG': 'W', 'AGC': 'S', 'AUC': 'I',
+            'CAU': 'H', 'AAU': 'N', 'AGU': 'S', 'GUU': 'V', 'CAC': 'H',
+            'ACG': 'T', 'CCG': 'P', 'CCA': 'P', 'ACA': 'T', 'CCC': 'P',
+            'UGU': 'C', 'GGU': 'G', 'UCU': 'S', 'GCG': 'A', 'UGC': 'C',
+            'CAG': 'Q', 'GAU': 'D', 'UAU': 'Y', 'CGG': 'R', 'UCG': 'S',
+            'AGG': 'R', 'GGG': 'G', 'UCC': 'S', 'UCA': 'S', 'UAA': '*',
+            'GGA': 'G', 'UAC': 'Y', 'GAC': 'D', 'UAG': '*', 'AUA': 'I',
+            'GCA': 'A', 'CUU': 'L', 'GGC': 'G', 'AUG': 'M', 'CUG': 'L',
+            'GAG': 'E', 'CUC': 'L', 'AGA': 'R', 'CUA': 'L', 'GCC': 'A',
+            'AAA': 'K', 'AAG': 'K', 'CAA': 'Q', 'UUU': 'F', 'CGU': 'R',
+            'CGC': 'R', 'CGA': 'R', 'GCU': 'A', 'GAA': 'E', 'AUU': 'I',
+            'UUG': 'L', 'UUA': 'L', 'UGA': '*', 'UUC': 'F'
+            }    
+    #find_orf.find_first_orf('sequence', ['AUG'], ['UAA'])
+    orf = find_orf.find_first_orf(sequence,
+            start_codons = start_codons,
+            stop_codons = stop_codons)
     
-
+    aa = translate.translate_sequence(orf, genetic_code)
+    return aa
 
 def main():
     import argparse
     
-    genetic_code = {'GUC': 'V', 'ACC': 'T', 'GUA': 'V', 'GUG': 'V', 'ACU': 'T', 'AAC': 'N', 'CCU': 'P', 'UGG': 'W', 'AGC': 'S', 'AUC': 'I', 'CAU': 'H', 'AAU': 'N', 'AGU': 'S', 'GUU': 'V', 'CAC': 'H', 'ACG': 'T', 'CCG': 'P', 'CCA': 'P', 'ACA': 'T', 'CCC': 'P', 'UGU': 'C', 'GGU': 'G', 'UCU': 'S', 'GCG': 'A', 'UGC': 'C', 'CAG': 'Q', 'GAU': 'D', 'UAU': 'Y', 'CGG': 'R', 'UCG': 'S', 'AGG': 'R', 'GGG': 'G', 'UCC': 'S', 'UCA': 'S', 'UAA': '*', 'GGA': 'G', 'UAC': 'Y', 'GAC': 'D', 'UAG': '*', 'AUA': 'I', 'GCA': 'A', 'CUU': 'L', 'GGC': 'G', 'AUG': 'M', 'CUG': 'L', 'GAG': 'E', 'CUC': 'L', 'AGA': 'R', 'CUA': 'L', 'GCC': 'A', 'AAA': 'K', 'AAG': 'K', 'CAA': 'Q', 'UUU': 'F', 'CGU': 'R', 'CGC': 'R', 'CGA': 'R', 'GCU': 'A', 'GAA': 'E', 'AUU': 'I', 'UUG': 'L', 'UUA': 'L', 'UGA': '*', 'UUC': 'F'}
-    rna_seq = ("AUG"
-            "UAC"
-            "UGG"
-            "CAC"
-            "GCU"
-            "ACU"
-            "GCU"
-            "CCA"
-            "UAU"
-            "ACU"
-            "CAC"
-            "CAG"
-            "AAU"
-            "AUC"
-            "AGU"
-            "ACA"
-            "GCG")
     # Create a command-line parser object
     parser = argparse.ArgumentParser()
 
@@ -76,7 +98,7 @@ def main():
     # Check to see if the path option was set to True by the caller. If so, parse
     # the sequence from the path
     if args.path:
-        sequence = parse_sequence_from_path(args.sequence)
+        sequence = find_orf.parse_sequence_from_path(args.sequence)
     else:
         sequence = args.sequence
 
@@ -87,10 +109,15 @@ def main():
     if not args.stop_codon:
         args.stop_codon = default_stop_codons
 
-    orf = find_first_orf(sequence = sequence,
+    orf = find_orf.find_first_orf(sequence = sequence,
             start_codons = args.start_codon,
             stop_codons = args.stop_codon)
-    sys.stdout.write('{}\n'.format(orf))
+
+    aa = find_translate_orf(sequence = sequence,
+            start_codons = args.start_codon,
+            stop_codons = args.stop_codon)    
+
+    sys.stdout.write('{}\n'.format(aa))
 
 
 if __name__ == '__main__':
